@@ -16,10 +16,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOAD_FOLDER'] = 'static'
 
 # The Specifications of clock
-min_angle = 45
-max_angle = 310
-min_value = -34
-max_value = 54
+min_angle = 20
+max_angle = 344
+min_value = 0
+max_value = 150
 
 @app.route('/', methods=['POST', 'GET'])
 @cross_origin(origin='*')
@@ -33,9 +33,9 @@ def detect_temperature():
                 print("Save = ", path_to_save)
                 image.save(path_to_save)
 
-                x, y, r = detect.calibrate_gauge(path_to_save)
+                x, y, r, clock = detect.calibrate_gauge(path_to_save)
 
-                res, img = detect.get_current_value(path_to_save, min_angle, max_angle, min_value, max_value, x, y, r)
+                res, img = detect.get_current_value(path_to_save, clock, min_angle, max_angle, min_value, max_value, x, y, r)
 
                 cv.imwrite(path_to_save, img)
                 return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
