@@ -6,6 +6,7 @@
 
 import cv2 as cv
 import numpy as np
+import filter
 
 def determine_avg_circles(circles, b):
     avg_x=0
@@ -28,15 +29,13 @@ def calibrate_gauge(path):
     clock = cv.imread(path)
     height, width = clock.shape[:2]
 
-    gray = cv.cvtColor(clock, cv.COLOR_BGR2GRAY)
-    img = cv.medianBlur(gray, 11)
-    kernel_sharpening = np.array([[-1,-1,-1], 
-                              [-1, 9,-1],
-                              [-1,-1,-1]])
-    img = cv.filter2D(img, -1, kernel_sharpening)
+    img = filter.implement_filter(clock)
+    cv.imshow('img', img)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
     
     try:
-        circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 20, param1=100, param2=35, minRadius=int(height*0.25), maxRadius=int(height*0.5))
+        circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 20, param1=100, param2=50, minRadius=int(height*0.3), maxRadius=int(height*0.5))
     except:
         return
     
@@ -87,16 +86,8 @@ def calibrate_gauge(path):
 
 def get_current_value(path, min_angle, max_angle, min_value, max_value, x, y, r):
     img = cv.imread(path)
-#     height, width = img.shape[:2]
-#     height, width = int(np.around(height*1.5)), int(np.around(width*1.5))
 
-#     img = cv.resize(img, (height, width))
-    gray2 = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    
-    thresh = 100
-    maxValue = 255
-    
-    _, dst2 = cv.threshold(gray2, thresh, maxValue, cv.THRESH_BINARY_INV)
+    dst2 = filter.implement_filter(img)
     
     try:
         lines = cv.HoughLinesP(image=dst2, rho=3, theta=np.pi / 180, threshold=100, minLineLength=10, maxLineGap=0)
@@ -159,6 +150,6 @@ def get_current_value(path, min_angle, max_angle, min_value, max_value, x, y, r)
     return np.array(res).mean(), img
 
 if __name__ == '__main__':
-    x, y, r = calibrate_gauge('static/test3.png')
+    x, y, r = calibrate_gauge('../clock2.png')
 
 
