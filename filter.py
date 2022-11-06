@@ -4,12 +4,16 @@ import matplotlib.pyplot as plt
 
 def implement_filter(image, n):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    kernel = np.array([[0, 1, 0],
-                       [1, -4, 1],
-                       [0, 1, 0]])
+    # kernel_sharpen = np.array([[-1, -1, -1],
+    #                            [-1, 9, -1],
+    #                            [-1, -1, -1]])
+    kernel_lap = np.array([[0, 1, 0],
+                           [1, -4, 1],
+                           [0, 1, 0]])
 
     image = cv2.GaussianBlur(image, (n, n), 0)
-    laplacian = cv2.filter2D(image, -1, kernel)
+    # image = cv2.filter2D(image, -1, kernel_sharpen)
+    laplacian = cv2.filter2D(image, -1, kernel_lap)
     _, laplacian = cv2.threshold(laplacian, 7, 255, cv2.THRESH_BINARY)
 
     return laplacian

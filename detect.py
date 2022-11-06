@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -35,17 +34,18 @@ def compute_distance(x1, y1, x2, y2):
 def calibrate_gauge(path):
     clock = cv.imread(path)
     height, width = clock.shape[:2]
+    ratio = 420/height
+    height, width = int(height*ratio), int(width*ratio)
+    clock = cv.resize(clock, (width, height))
 
     img = filter.implement_filter(clock, 5)
-    # cv.imshow('img', img)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
-    
-    try:
-        circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 20, param1=100, param2=50, minRadius=int(height*0.35), maxRadius=int(height*0.5))
-    except:
+    cv.imwrite('result_image/filter.png', img)
+
+    circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 20, param1=100, param2=50, minRadius=int(height*0.35), maxRadius=int(height*0.5))
+    if isinstance(circles, type(None)):
+        print('done')
         return
-    
+
     circles = np.uint16(np.around(circles))
     a, b, c = circles.shape
     x, y, r = determine_avg_circles(circles, b)
@@ -82,30 +82,30 @@ def calibrate_gauge(path):
         cv.line(clock, (int(p1[i][0]), int(p1[i][1])), (int(p2[i][0]), int(p2[i][1])),(0, 255, 0), 2)
         cv.putText(clock, '%s' %(int(i*separation)), (int(p_text[i][0]), int(p_text[i][1])), cv.FONT_HERSHEY_SIMPLEX, 0.3,(0,0,0),1,cv.LINE_AA)
 
-    # cv.imshow('detected circles', clock)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
+    # plt.imshow(clock)
+    # plt.show()
 
     return x, y, r, clock
 
 def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x, y, r):
     img = cv.imread(path)
 
+    height, width = img.shape[:2]
+    ratio = 420/height
+    height, width = int(height*ratio), int(width*ratio)
+    img = cv.resize(img, (width, height))
+
     dst = filter.implement_filter(img, 5)
-    # cv.imshow('dst', dst)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
-    
-    try:
-        lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=105, minLineLength=10, maxLineGap=0)
-    except:
+
+    lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=105, minLineLength=10, maxLineGap=0)
+    if isinstance(lines, type(None)):
         return
     
     final_line_list = []
 
     diff1LowerBound = 0.0 # diff1LowerBound and diff1UpperBound determine how close the line should be from the center
     diff1UpperBound = 0.3
-    diff2LowerBound = 0.5 # diff2LowerBound and diff2UpperBound determine how close the other point of the line should be to the outside of the gauge
+    diff2LowerBound = 0.55 # diff2LowerBound and diff2UpperBound determine how close the other point of the line should be to the outside of the gauge
     diff2UpperBound = 1.0
     
     for i in range(lines.shape[0]):
@@ -157,14 +157,11 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
     return np.array(res).mean(), clock
 
 if __name__ == '__main__':
-    x, y, r, circle = calibrate_gauge('test_image/test4.png')
-    res, img = get_current_value('test_image/test4.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    x, y, r, circle = calibrate_gauge('test_image/test1.png')
+    res, img = get_current_value('test_image/test1.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    print(res)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     plt.imshow(img)
     plt.show()
-    print(res)
-    # cv.imshow('img', img)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
 
 
