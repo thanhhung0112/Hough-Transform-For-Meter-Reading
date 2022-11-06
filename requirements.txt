@@ -1,4 +1,5 @@
 numpy
 opencv-python
+pyserial
 flask
 flask_cors

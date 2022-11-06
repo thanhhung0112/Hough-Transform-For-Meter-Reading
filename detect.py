@@ -156,8 +156,8 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
     return np.array(res).mean(), clock
 
 if __name__ == '__main__':
-    x, y, r, circle = calibrate_gauge('../clock2.png')
-    res, img = get_current_value('../clock2.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    x, y, r, circle = calibrate_gauge('../test4.png')
+    res, img = get_current_value('../test4.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
     # cv.imshow('img', img)
     # cv.waitKey(0)
