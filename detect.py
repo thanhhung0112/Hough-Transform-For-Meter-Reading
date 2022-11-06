@@ -151,7 +151,7 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
     for x1, y1, x2, y2 in final_line_list:
         cv.line(clock, (x1, y1), (x2, y2),(0, 255, 0), 2)
     
-    cv.imwrite('detected.png', clock)
+    cv.imwrite('result_image/detected.png', clock)
     
     return np.array(res).mean(), clock
 
