@@ -6,6 +6,7 @@
 
 import cv2 as cv
 import numpy as np
+import matplotlib.pyplot as plt
 import filter
 
 # The Specifications of clock
@@ -156,8 +157,11 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
     return np.array(res).mean(), clock
 
 if __name__ == '__main__':
-    x, y, r, circle = calibrate_gauge('../test4.png')
-    res, img = get_current_value('../test4.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    x, y, r, circle = calibrate_gauge('test_image/test4.png')
+    res, img = get_current_value('test_image/test4.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    plt.imshow(img)
+    plt.show()
     print(res)
     # cv.imshow('img', img)
     # cv.waitKey(0)

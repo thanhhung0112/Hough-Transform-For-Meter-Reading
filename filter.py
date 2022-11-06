@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 def implement_filter(image, n):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -13,10 +14,10 @@ def implement_filter(image, n):
 
     return laplacian
 
-# if __name__ == '__main__':
-#     image = cv2.imread('test_image/test3.png')
-#     image = implement_filter(image)
-#
-#     cv2.imshow('image', image)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
+if __name__ == '__main__':
+    image = cv2.imread('test_image/test3.png', 1)
+    image = implement_filter(image, 5)
+
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    plt.imshow(image)
+    plt.show()
