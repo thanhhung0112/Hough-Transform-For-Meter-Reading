@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 import filter
 
 # The Specifications of clock
-min_angle = 20
-max_angle = 344
+min_angle = 39
+max_angle = 316
 min_value = 0
-max_value = 150
+max_value = 100
 
 def determine_avg_circles(circles, b):
     avg_x=0
@@ -96,7 +96,7 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
 
     dst = filter.implement_filter(img, 5)
 
-    lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=105, minLineLength=10, maxLineGap=0)
+    lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=95, minLineLength=10, maxLineGap=0)
     if isinstance(lines, type(None)):
         return
     
@@ -156,8 +156,8 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
     return np.array(res).mean(), clock
 
 if __name__ == '__main__':
-    x, y, r, circle = calibrate_gauge('test_image/result2.png')
-    res, img = get_current_value('test_image/result2.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    x, y, r, circle = calibrate_gauge('test_image/test5.png')
+    res, img = get_current_value('test_image/test5.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     plt.imshow(img)
