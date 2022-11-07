@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def implement_filter(image, n):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    if len(image.shape) == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     kernel_lap = np.array([[0, 1, 0],
                            [1, -4, 1],
                            [0, 1, 0]])

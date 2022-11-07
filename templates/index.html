@@ -134,7 +134,7 @@
         <div class='result_title'><b>Kết quả nhận diện</b></div>
         <div class='result_id'>{{ msg }}</div>
         {% if res != 0 %}
-        <div class='result_id'>Nhiệt độ: <span class='result_id_number'>{{ res }} </span></div>
+        <div class='result_id'>Nhiệt độ: <span class='result_id_number'>{{ res }} +- 2</span></div>
         {% endif %}
         {% if user_image %}
         <img style="max-width:560px; border-radius:1rem" src="{{ url_for('static', filename=user_image) }}?{{ rand }}"
