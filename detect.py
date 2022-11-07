@@ -7,7 +7,7 @@ import filter
 min_angle = 39
 max_angle = 316
 min_value = 0
-max_value = 100
+max_value = 100                     
 
 def determine_avg_circles(circles, b):
     avg_x=0
@@ -111,7 +111,6 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
                 diff1, diff2 = diff2, diff1
                 
             if (((diff1<diff1UpperBound*r) and (diff1>diff1LowerBound*r) and (diff2<diff2UpperBound*r)) and (diff2>diff2LowerBound*r)):
-                line_length = compute_distance(x1, y1, x2, y2)
                 # add to final list
                 final_line_list.append([x1, y1, x2, y2])
                 
@@ -151,8 +150,8 @@ def get_current_value(path, clock, min_angle, max_angle, min_value, max_value, x
     return np.array(res).mean(), clock
 
 if __name__ == '__main__':
-    x, y, r, circle = calibrate_gauge('test_image/test5.png')
-    res, img = get_current_value('test_image/test5.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    x, y, r, circle = calibrate_gauge('test_image/test4.png')
+    res, img = get_current_value('test_image/test4.png', circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     plt.imshow(img)
