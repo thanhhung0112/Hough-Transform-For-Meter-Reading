@@ -142,7 +142,7 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
     return np.array(res).mean(), circle
 
 if __name__ == '__main__':
-    image = cv.imread('test_image/test4.png')
+    image = cv.imread('test_image/test6.png')
     x, y, r, circle = calibrate_gauge(image)
     res, img = get_current_value(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
