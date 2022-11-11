@@ -28,6 +28,7 @@ def calibrate_gauge(image):
     image = cv.resize(image, (width, height))
 
     img = filter.implement_filter(image, 5)
+    cv.imwrite('result_image/filter_image.png', img)
 
     circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 35, param2=35, minRadius=int(height*0.35), maxRadius=int(height*0.5))
     if isinstance(circles, type(None)):
@@ -84,7 +85,7 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
 
     dst = filter.implement_filter(img, 5)
 
-    lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=95, minLineLength=10, maxLineGap=0)
+    lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=100, minLineLength=10, maxLineGap=0)
     if isinstance(lines, type(None)):
         return
     
@@ -93,7 +94,7 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
     diff1LowerBound = 0.0 # diff1LowerBound and diff1UpperBound determine how close the line should be from the center
     diff1UpperBound = 0.3
     diff2LowerBound = 0.55 # diff2LowerBound and diff2UpperBound determine how close the other point of the line should be to the outside of the gauge
-    diff2UpperBound = 1.0
+    diff2UpperBound = 0.95
     
     for i in range(lines.shape[0]):
         for x1, y1, x2, y2 in lines[i]:
@@ -112,13 +113,23 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
         dist_pt_1 = compute_distance(x, y, x2, y2)
         
         if (dist_pt_0 > dist_pt_1):
-            x_angle = x1 - x
-            y_angle = y - y1
+            x_angle1 = x1 - x
+            x_angle2 = x1 - x2 
+            x_angle = sum([x_angle1, x_angle2]) / 2
+            y_angle1 = y - y1
+            y_angle2 = y2 - y1
+            y_angle = sum([y_angle1, y_angle2]) / 2
         else:
-            x_angle = x2 - x
-            y_angle = y - y2
-        
-        degree = np.arctan(np.divide(float(y_angle), float(x_angle)))
+            x_angle1 = x2 - x
+            x_angle2 = x2 - x1
+            x_angle = sum([x_angle1, x_angle2]) / 2
+            y_angle1 = y - y2
+            y_angle2 = y1 - y2
+            y_angle = sum([y_angle1, y_angle2]) / 2
+
+        degree1 = np.arctan(np.divide(float(y_angle1), float(x_angle1)))
+        degree2 = np.arctan(np.divide(float(y_angle2), float(x_angle2)))
+        degree = sum([degree1, degree2]) / 2
         degree = np.rad2deg(degree)
 
         if x_angle > 0 and y_angle > 0:  #in quadrant I
