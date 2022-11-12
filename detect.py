@@ -27,10 +27,10 @@ def calibrate_gauge(image):
     height, width = int(height*ratio), int(width*ratio)
     image = cv.resize(image, (width, height))
 
-    img = filter.implement_filter(image, 5)
-    cv.imwrite('result_image/filter_image.png', img)
+    img = filter.filter_clahe(image)
+    img = filter.filter_laplacian(img, 9)
 
-    circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 35, param2=35, minRadius=int(height*0.35), maxRadius=int(height*0.5))
+    circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 35, param2=35, minRadius=int(height*0.35), maxRadius=int(height*0.55))
     if isinstance(circles, type(None)):
         return
 
@@ -83,9 +83,10 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
     height, width = int(height*ratio), int(width*ratio)
     img = cv.resize(image, (width, height))
 
-    dst = filter.implement_filter(img, 5)
+    img = filter.filter_clahe(img)
+    dst = filter.filter_laplacian(img, 5)
 
-    lines = cv.HoughLinesP(image=dst, rho=1, theta=np.pi / 180, threshold=100, minLineLength=10, maxLineGap=0)
+    lines = cv.HoughLinesP(image=dst, rho=2, theta=np.pi / 180, threshold=100, minLineLength=0, maxLineGap=0)
     if isinstance(lines, type(None)):
         return
     
@@ -94,7 +95,7 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
     diff1LowerBound = 0.0 # diff1LowerBound and diff1UpperBound determine how close the line should be from the center
     diff1UpperBound = 0.3
     diff2LowerBound = 0.55 # diff2LowerBound and diff2UpperBound determine how close the other point of the line should be to the outside of the gauge
-    diff2UpperBound = 0.95
+    diff2UpperBound = 1.0
     
     for i in range(lines.shape[0]):
         for x1, y1, x2, y2 in lines[i]:
@@ -150,6 +151,8 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
     
     cv.imwrite('result_image/detected.png', circle)
     
+    if len(res) == 0:
+        return None, circle
     return np.array(res).mean(), circle
 
 if __name__ == '__main__':

@@ -19,12 +19,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOAD_FOLDER'] = 'static'
 
 # The Specifications of clock
-min_angle = 40
-max_angle = 310
-min_value = -10
-max_value = 50
+min_angle = 17
+max_angle = 340
+min_value = 0
+max_value = 150
 loop = 8
-url = "http://192.168.0.191:8080/shot.jpg"
+url = "http://192.168.1.8:8080/shot.jpg"
 
 @app.route('/', methods=['POST', 'GET'])
 @cross_origin(origin='*')
@@ -32,12 +32,10 @@ def detect_temperature():
     global loop
     if request.method == "POST":
         try:
-            # image = request.files['file']
-            image = camera.get_frame(url, loop)
+            while True:
+                # image = request.files['file']
+                image = camera.get_frame(url, loop)
 
-            if not(isinstance(image, type(None))):
-            # if 1:
-                # Lưu file
                 # path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
                 path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], f'test{loop}.png')
 
@@ -48,17 +46,17 @@ def detect_temperature():
 
                 res, img = detect.get_current_value(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
 
-                cv.imwrite(path_to_save, img)
-                # loop += 1
+                if not(isinstance(res, type(None))):
+                    break
 
-                # return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
-                return render_template('index.html', user_image=f'test{loop}.png', rand=str(random()), msg='Success', res=res)
-            else:
-                # Nếu không có file thì yêu cầu tải file
-                return render_template('index.html', msg='Không nhận diện được nhiệt độ', loop=loop)
+            cv.imwrite(path_to_save, img)
+            # loop += 1
+
+            # return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
+            return render_template('index.html', user_image=f'test{loop}.png', rand=str(random()), msg='Success', res=res)
         except:
             print("something's wrong, fix bug")
-            return render_template('index.html', msg='Không kết nối được với camera', loop=loop)
+            return render_template('index.html', msg='Không nhận diện được nhiệt độ', loop=loop)
 
     else:
         return render_template('index.html', loop=loop)
