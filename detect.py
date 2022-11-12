@@ -15,7 +15,7 @@ def determine_avg_circles(circles):
 def compute_distance(x1, y1, x2, y2):
     return np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-def calibrate_gauge(image):
+def detect_circle(image):
     height, width = image.shape[:2]
 
     residual = int((width - height) / 2) if width > height else 0
@@ -71,7 +71,7 @@ def calibrate_gauge(image):
 
     return x, y, r, image
 
-def get_current_value(image, circle, min_angle, max_angle, min_value, max_value, x, y, r):
+def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r):
     height, width = image.shape[:2]
 
     residual = int((width - height) / 2) if width > height else 0
@@ -157,8 +157,8 @@ def get_current_value(image, circle, min_angle, max_angle, min_value, max_value,
 
 if __name__ == '__main__':
     image = cv.imread('test_image/test6.png')
-    x, y, r, circle = calibrate_gauge(image)
-    res, img = get_current_value(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
+    x, y, r, circle = detect_circle(image)
+    res, img = detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
 
 

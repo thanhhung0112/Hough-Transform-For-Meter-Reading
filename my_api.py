@@ -42,9 +42,9 @@ def detect_temperature():
                 print("Save = ", path_to_save)
                 # image.save(path_to_save)
 
-                x, y, r, circle = detect.calibrate_gauge(image)
+                x, y, r, circle = detect.detect_circle(image)
 
-                res, img = detect.get_current_value(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
+                res, img = detect.detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
 
                 if not(isinstance(res, type(None))):
                     break
