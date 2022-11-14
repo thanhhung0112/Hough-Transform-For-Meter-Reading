@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import filter
 
 # The Specifications of clock
-min_angle = 38
+# base on the distributed degree with the detected circle to determine min_angle and max_angle
+min_angle = 38 
 max_angle = 316
 min_value = 0
 max_value = 100                     
@@ -25,10 +26,10 @@ def detect_circle(image):
     
     ratio = 400/height
     height, width = int(height*ratio), int(width*ratio)
-    image = cv.resize(image, (width, height))
+    image = cv.resize(image, (width, height)) # desired image 400x400
 
-    img = filter.filter_clahe(image)
-    img = filter.filter_laplacian(img, 9)
+    img = filter.filter_clahe(image) # improve contrast of image
+    img = filter.filter_laplacian(img, 9) # detect edge of image to get information easily
 
     circles = cv.HoughCircles(img,cv.HOUGH_GRADIENT, 1, 35, param2=35, minRadius=int(height*0.35), maxRadius=int(height*0.55))
     if isinstance(circles, type(None)):
@@ -41,7 +42,7 @@ def detect_circle(image):
     cv.circle(image, (x, y), r, (0, 0, 255), 3, cv.LINE_AA)  # draw circle
     cv.circle(image, (x, y), 2, (0, 255, 0), 3, cv.LINE_AA)  # draw center of circle
 
-
+    # this part is only used to visualize the circle and the distributed degree
     separation = 10.0 #in degrees
     interval = int(360 / separation)
     p1 = np.zeros((interval,2))  #set empty arrays
@@ -64,7 +65,7 @@ def detect_circle(image):
                 p2[i][j] = y + r * np.sin(separation * i * np.pi / 180)
                 p_text[i][j] = y + text_offset_y + 1.1 * r * np.sin((separation) * (i+9) * np.pi / 180)  # point for text labels, i+9 rotates the labels by 90 degrees
 
-    #add the lines and labels to the image
+    # add the lines and labels to the image
     for i in range(0,interval):
         cv.line(image, (int(p1[i][0]), int(p1[i][1])), (int(p2[i][0]), int(p2[i][1])),(0, 255, 0), 2)
         cv.putText(image, '%s' %(int(i*separation)), (int(p_text[i][0]), int(p_text[i][1])), cv.FONT_HERSHEY_SIMPLEX, 0.3,(0,0,0),1,cv.LINE_AA)
@@ -90,6 +91,7 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
     if isinstance(lines, type(None)):
         return
     
+    # this part is used to select the good line 
     final_line_list = []
 
     diff1LowerBound = 0.0 # diff1LowerBound and diff1UpperBound determine how close the line should be from the center
@@ -108,6 +110,8 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
             if (((diff1<diff1UpperBound*r) and (diff1>diff1LowerBound*r) and (diff2<diff2UpperBound*r)) and (diff2>diff2LowerBound*r)):
                 final_line_list.append([x1, y1, x2, y2])
                 
+    # this part is used to determine the real degree
+    # using bilinear interpolation to approximate the value of the point between 2 point min and max value of the clock
     res = []
     for x1, y1, x2, y2 in final_line_list:
         dist_pt_0 = compute_distance(x, y, x1, y1)
@@ -130,7 +134,7 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
 
         degree1 = np.arctan(np.divide(float(y_angle1), float(x_angle1)))
         degree2 = np.arctan(np.divide(float(y_angle2), float(x_angle2)))
-        degree = sum([degree1, degree2]) / 2
+        degree = sum([degree1, 3*degree2]) / 4
         degree = np.rad2deg(degree)
 
         if x_angle > 0 and y_angle > 0:  #in quadrant I
@@ -142,10 +146,12 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
         elif x_angle > 0 and y_angle < 0:  #in quadrant IV
             final_angle = float(270 - degree)
         
+        # bilinear interpolation
         value = ((max_angle-final_angle)/(max_angle-min_angle)) * min_value + ((final_angle-min_angle)/(max_angle-min_angle)) * max_value
         
         res.append(value)
 
+    # only using to visualize the lines 
     for x1, y1, x2, y2 in final_line_list:
         cv.line(circle, (x1, y1), (x2, y2),(0, 255, 0), 2)
     
@@ -156,7 +162,7 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
     return np.array(res).mean(), circle
 
 if __name__ == '__main__':
-    image = cv.imread('test_image/test6.png')
+    image = cv.imread('test_image/test3.png')
     x, y, r, circle = detect_circle(image)
     res, img = detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)

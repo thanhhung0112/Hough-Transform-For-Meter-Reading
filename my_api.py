@@ -24,7 +24,7 @@ max_angle = 340
 min_value = 0
 max_value = 150
 loop = 8
-url = "http://192.168.1.8:8080/shot.jpg"
+url = "http://192.168.1.8:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
 
 @app.route('/', methods=['POST', 'GET'])
 @cross_origin(origin='*')
@@ -32,11 +32,14 @@ def detect_temperature():
     global loop
     if request.method == "POST":
         try:
+            # using while loop to get the res value which is the real number
+            # ignore the cases which only detected the lines or the circle
             while True:
                 # image = request.files['file']
                 image = camera.get_frame(url, loop)
 
                 # path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+                # any detected image on the web is saved at this path
                 path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], f'test{loop}.png')
 
                 print("Save = ", path_to_save)
@@ -46,11 +49,12 @@ def detect_temperature():
 
                 res, img = detect.detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
 
+                # check the error cases
                 if not(isinstance(res, type(None))):
                     break
 
             cv.imwrite(path_to_save, img)
-            # loop += 1
+            # loop += 1 # update the loop value to save different detected images (particularly 5 images at 5 corner)
 
             # return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
             return render_template('index.html', user_image=f'test{loop}.png', rand=str(random()), msg='Success', res=res)
