@@ -4,9 +4,6 @@ from flask import request
 import cv2 as cv
 import os
 from random import random
-# import core
-# import serial
-# import time 
 import camera
 import detect
 import get_time
