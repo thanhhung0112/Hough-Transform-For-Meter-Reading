@@ -9,6 +9,7 @@ from random import random
 # import time 
 import camera
 import detect
+import get_time
 
 # Initialize back end server
 app = Flask(__name__)

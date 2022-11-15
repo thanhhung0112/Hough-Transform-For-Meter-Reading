@@ -166,5 +166,3 @@ if __name__ == '__main__':
     x, y, r, circle = detect_circle(image)
     res, img = detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
-
-
