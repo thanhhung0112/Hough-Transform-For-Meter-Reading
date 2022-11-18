@@ -35,10 +35,6 @@
             text-align: center;
             padding: 20px;
         }
-        .footer
-        {
-
-        }
 
         .info
         {
@@ -49,7 +45,6 @@
             padding:20px;
             font-size:14px;
         }
-
 
         .content {
             width: 100%;
@@ -94,7 +89,6 @@
             padding: 5px;
             margin: 15px;
             font-size: 16px;
-
         }
 
         .result_id_number {
@@ -107,7 +101,6 @@
             font-weight: bold;
             font-size: 18px;
             border-radius: 5px;
-
         }
 
     </style>
@@ -126,9 +119,6 @@
         <div class='upload_hint' id='upload_hint'>
                 Kết nối với camera
         </div>
-        <!-- <form action="/" method="POST" enctype="multipart/form-data" id='form'> -->
-        <!--     <input type="file" name="file" id="fileinput" style="display: none;" accept="image/*"> -->
-        <!-- </form> -->
     </div>
 
     <div class='result_part'>
@@ -145,23 +135,5 @@
         {% endif %}
     </div>
 </div>
-<div class='footer'>
-
-</div>
-
 </body>
-<script>
-
-    $('#upload_button').click(function () {
-        $("#fileinput").trigger('click');
-    });
-
-    $('#fileinput').change(function () {
-        $('#form').submit();
-        $('#upload_hint').text('Đang tải file ' + $('#fileinput')[0].files[0].name + ' lên server...');
-    });
-
-
-</script>
-
 </html>
