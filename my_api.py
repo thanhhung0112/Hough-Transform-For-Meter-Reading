@@ -21,7 +21,7 @@ min_angle = 17
 max_angle = 340
 min_value = 0
 max_value = 150
-loop = 8
+loop = 1
 url = "http://192.168.0.191:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
 
 @app.route('/', methods=['POST', 'GET'])
@@ -38,7 +38,7 @@ def detect_temperature():
 
                 # path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
                 # any detected image on the web is saved at this path
-                path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], f'test{loop}.png')
+                path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], f'góc_thứ_{loop}.png')
                 path_result_file = os.path.join(app.config['UPLOAD_FOLDER'], 'result.txt')
 
                 print("Save = ", path_to_save)
@@ -57,15 +57,24 @@ def detect_temperature():
 
             if os.path.isfile(path_result_file) == False:
                 with open(path_result_file, 'w') as f:
-                    f.write(f'test{loop}.png - Nhiệt độ: {res} - Time: {time_current}\n')
+                    if loop == 5:
+                        f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n\n')
+                    else:
+                        f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
             else:
                 with open(path_result_file, 'a') as f:
-                    f.write(f'test{loop}.png - Nhiệt độ: {res} - Time: {time_current}\n')
+                    if loop == 5:
+                        f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n\n')
+                    else:
+                        f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
 
-            # loop += 1 # update the loop value to save different detected images (particularly 5 images at 5 corner)
+            loop += 1 # update the loop value to save different detected images (particularly 5 images at 5 corner)
+            
+            if loop > 5:
+                loop = 1
 
             # return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
-            return render_template('index.html', user_image=f'test{loop}.png', rand=str(random()), msg='Success', res=res)
+            return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', res=res)
         except:
             print("something's wrong, fix bug")
             return render_template('index.html', msg='Không nhận diện được nhiệt độ', loop=loop)
