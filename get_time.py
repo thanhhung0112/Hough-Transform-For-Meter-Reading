@@ -12,4 +12,5 @@ def get_current_time():
 
     saved_time = f'{hour}h {minute}m {second}s {day}/{month}/{year}'
     print(saved_time)
+    return saved_time
 

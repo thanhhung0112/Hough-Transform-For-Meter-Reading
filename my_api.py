@@ -22,7 +22,7 @@ max_angle = 340
 min_value = 0
 max_value = 150
 loop = 8
-url = "http://192.168.1.8:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
+url = "http://192.168.0.191:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
 
 @app.route('/', methods=['POST', 'GET'])
 @cross_origin(origin='*')
@@ -39,6 +39,7 @@ def detect_temperature():
                 # path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
                 # any detected image on the web is saved at this path
                 path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], f'test{loop}.png')
+                path_result_file = os.path.join(app.config['UPLOAD_FOLDER'], 'result.txt')
 
                 print("Save = ", path_to_save)
                 # image.save(path_to_save)
@@ -52,6 +53,15 @@ def detect_temperature():
                     break
 
             cv.imwrite(path_to_save, img)
+            time_current = get_time.get_current_time()
+
+            if os.path.isfile(path_result_file) == False:
+                with open(path_result_file, 'w') as f:
+                    f.write(f'test{loop}.png - Nhiệt độ: {res} - Time: {time_current}\n')
+            else:
+                with open(path_result_file, 'a') as f:
+                    f.write(f'test{loop}.png - Nhiệt độ: {res} - Time: {time_current}\n')
+
             # loop += 1 # update the loop value to save different detected images (particularly 5 images at 5 corner)
 
             # return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
