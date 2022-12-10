@@ -102,6 +102,17 @@
             font-size: 18px;
             border-radius: 5px;
         }
+        .result_id_number_alarm {
+            margin: 15px;
+            padding: 5px;
+            padding-left: 15px;
+            padding-right: 15px;
+            background-color: #C50F1F;
+            color: black;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 5px;
+        }
 
     </style>
 </head>
@@ -125,9 +136,15 @@
         {% if msg %}
         <div class='result_title'><b>Kết quả nhận diện</b></div>
         <div class='result_id'>{{ msg }}</div>
-        {% if res != 0 %}
+
+		{% if res %}
         <div class='result_id'>Nhiệt độ: <span class='result_id_number'>{{ res }} ± 2</span></div>
         {% endif %}
+
+		{% if alarm %}
+        <div class='result_id'>Nhiệt độ: <span class='result_id_number_alarm'>{{ alarm }} ± 2</span></div>
+        {% endif %}
+
         {% if user_image %}
         <img style="max-width:560px; border-radius:1rem" src="{{ url_for('static', filename=user_image) }}?{{ rand }}"
              alt="User Image">

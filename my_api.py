@@ -73,8 +73,11 @@ def detect_temperature():
             if loop > 5:
                 loop = 1
 
-            # return render_template('index.html', user_image=image.filename, rand=str(random()), msg='Success', res=res)
-            return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', res=res)
+            if res < 40:
+                return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', res=res)
+            elif res > 40:
+                return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', alarm=res)
+
         except:
             print("something's wrong, fix bug")
             return render_template('index.html', msg='Không nhận diện được nhiệt độ', loop=loop)
