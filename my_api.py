@@ -23,7 +23,7 @@ min_angle = 17
 max_angle = 340
 min_value = 0
 max_value = 150
-loop = 1
+loop = 0
 url = "http://192.168.0.191:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
 
 @app.route('/', methods=['POST', 'GET'])
@@ -32,19 +32,21 @@ def detect_temperature():
     global loop
     if request.method == "POST":
         try:
+            loop += 1 # update the loop value to save different detected images (particularly 5 images at 5 corner)
+
+            if loop > 5:
+                loop = 1
+
             # using while loop to get the res value which is the real number
             # ignore the cases which only detected the lines or the circle
-            while True:
-                # image = request.files['file']
-                image = camera.get_frame(url, loop)
-
-                # path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            while True:              
                 # any detected image on the web is saved at this path
                 path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], f'góc_thứ_{loop}.png')
                 path_result_file = os.path.join(app.config['UPLOAD_FOLDER'], 'result.txt')
-
-                print("Save = ", path_to_save)
-                # image.save(path_to_save)
+                
+                if os.path.isfile(f'./test_image/góc_thứ_{loop}.png') == True:
+                    os.system(f'rm ./test_image/góc_thứ_{loop}.png')
+                image = camera.get_frame(url, loop)
 
                 x, y, r, circle = detect.detect_circle(image)
 
@@ -54,6 +56,8 @@ def detect_temperature():
                 if not(isinstance(res, type(None))):
                     break
 
+            if os.path.isfile(path_to_save) == True:
+                os.system(f'rm {path_to_save}')
             cv.imwrite(path_to_save, img)
             time_current = get_time.get_current_time()
 
@@ -70,14 +74,9 @@ def detect_temperature():
                     else:
                         f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
 
-            loop += 1 # update the loop value to save different detected images (particularly 5 images at 5 corner)
-            
-            if loop > 5:
-                loop = 1
-
-            if res < 40:
+            if res < 70:
                 return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', res=res)
-            elif res > 40:
+            elif res > 70:
                 return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', alarm=res)
 
         except:
