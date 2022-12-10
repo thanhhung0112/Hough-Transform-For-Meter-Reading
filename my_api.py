@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_ngrok import run_with_ngrok
 from flask_cors import CORS, cross_origin
 from flask import request
 import cv2 as cv
@@ -12,9 +13,10 @@ import get_time
 app = Flask(__name__)
 
 # Apply flask cors
-CORS(app)
+# CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOAD_FOLDER'] = 'static'
+run_with_ngrok(app)
 
 # The Specifications of clock
 min_angle = 17
@@ -87,4 +89,4 @@ def detect_temperature():
 
 # Start backend
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run()
