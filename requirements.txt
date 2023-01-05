@@ -1,6 +1,7 @@
 numpy
 opencv-python
-pyserial
+matplotlib
 requests
 flask
 flask_cors
+flask-ngrok

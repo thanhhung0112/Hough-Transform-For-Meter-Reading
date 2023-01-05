@@ -63,25 +63,29 @@ def detect_temperature():
 
             if os.path.isfile(path_result_file) == False:
                 with open(path_result_file, 'w') as f:
-                    if loop == 5:
+                    if loop == 1:
+                        f.write(f'\ngóc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
+                    elif loop == 5:
                         f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n\n')
                     else:
                         f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
             else:
                 with open(path_result_file, 'a') as f:
-                    if loop == 5:
+                    if loop == 1:
+                        f.write(f'\ngóc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
+                    elif loop == 5:
                         f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n\n')
                     else:
                         f.write(f'góc_thứ_{loop} - Nhiệt độ: {res} - Time: {time_current}\n')
 
             if res < 70:
-                return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', res=res)
+                return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg=f'Góc thứ {loop}: Success', res=res)
             elif res > 70:
-                return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg='Success', alarm=res)
+                return render_template('index.html', user_image=f'góc_thứ_{loop}.png', rand=str(random()), msg=f'Góc thứ {loop}: Success', alarm=res)
 
         except:
             print("something's wrong, fix bug")
-            return render_template('index.html', msg='Không nhận diện được nhiệt độ', loop=loop)
+            return render_template('index.html', msg=f'Góc thứ {loop}: Unsuccess', loop=loop)
 
     else:
         return render_template('index.html', loop=loop)
