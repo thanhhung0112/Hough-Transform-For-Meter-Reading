@@ -162,7 +162,7 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
     return np.median(np.array(res)), circle
 
 if __name__ == '__main__':
-    image = cv.imread('test_image/test3.png')
+    image = cv.imread('test_image/test4.png')
     x, y, r, circle = detect_circle(image)
     res, img = detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
