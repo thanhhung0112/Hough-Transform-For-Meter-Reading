@@ -1,6 +1,10 @@
 import time 
 
 def get_current_time():
+    """
+    It takes the current time, and returns it in a format that is easy to read
+    :return: The current time in the format of hour, minute, second, day, month, year.
+    """
     current_time = time.localtime()
 
     year = current_time[0]

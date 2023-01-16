@@ -24,11 +24,37 @@ max_angle = 340
 min_value = 0
 max_value = 150
 loop = 0
-url = "http://192.168.0.191:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
+url = "http://192.168.43.151:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
 
 @app.route('/', methods=['POST', 'GET'])
 @cross_origin(origin='*')
 def detect_temperature():
+    """
+    The function is called when the user clicks the "Detect" button on the web page. 
+    
+    The function will detect the temperature of the object in the image and save the result to a text
+    file. 
+    
+    The function will also save the detected image to the server. 
+    
+    The function will return the detected image and the result to the web page. 
+    
+    The function will also return the message to the web page. 
+    
+    The function will also return the alarm message to the web page if the temperature is higher than 70
+    degrees. 
+    
+    The function will also return the loop value to the web page. 
+    
+    The loop value is used to save the detected images at 5 corners. 
+    
+    The loop value is also used to save the result to the text file. 
+    
+    The loop value is also used to return the message to the web page. 
+    
+    The loop value is also used to return the alarm message
+    :return: the result of the render_template function.
+    """
     global loop
     if request.method == "POST":
         try:

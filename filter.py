@@ -3,6 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def filter_laplacian(image, n):
+    """
+    It takes an image, blurs it, and then applies a Laplacian filter to it
+    
+    :param image: The image to be filtered
+    :param n: the size of the Gaussian kernel
+    :return: The laplacian image
+    """
     if len(image.shape) == 3:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     kernel_lap = np.array([[0, 1, 0],
@@ -17,6 +24,13 @@ def filter_laplacian(image, n):
     return laplacian
 
 def filter_clahe(image):
+    """
+    It takes an image as input, converts it to grayscale, applies a histogram equalization, and returns
+    the result
+    
+    :param image: The input image
+    :return: The image is being returned.
+    """
     if len(image.shape) == 3:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))

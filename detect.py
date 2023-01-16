@@ -11,12 +11,34 @@ min_value = 0
 max_value = 100                     
 
 def determine_avg_circles(circles):
+    """
+    It takes a list of circles and returns the average circle
+    
+    :param circles: The output of cv2.HoughCircles()
+    :return: The average of the circles.
+    """
     return np.mean(circles, axis=1, dtype=np.int32).reshape((3,))
 
 def compute_distance(x1, y1, x2, y2):
+    """
+    It takes four numbers as input and returns the distance between two points
+    
+    :param x1: x coordinate of the first point
+    :param y1: the y-coordinate of the first point
+    :param x2: x-coordinate of the second point
+    :param y2: the y coordinate of the second point
+    :return: The distance between two points.
+    """
     return np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
 def detect_circle(image):
+    """
+    It takes an image, crops it to a square, resizes it to 400x400, improves the contrast, detects the
+    edges, detects the circle, and draws the circle and the degree lines on the image
+    
+    :param image: the image to be processed
+    :return: x, y, r, image
+    """
     height, width = image.shape[:2]
 
     residual = int((width - height) / 2) if width > height else 0
@@ -73,6 +95,22 @@ def detect_circle(image):
     return x, y, r, image
 
 def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r):
+    """
+    It takes in an image, the center of the gauge, the minimum and maximum angles of the gauge, the
+    minimum and maximum values of the gauge, and the radius of the gauge. It then returns the value of
+    the gauge
+    
+    :param image: the image we're working with
+    :param circle: the image of the gauge
+    :param min_angle: the minimum angle of the gauge (e.g. 0)
+    :param max_angle: the maximum angle of the gauge (e.g. 240)
+    :param min_value: the minimum value of the gauge
+    :param max_value: the maximum value of the gauge
+    :param x: x coordinate of the center of the gauge
+    :param y: y coordinate of the center of the gauge
+    :param r: radius of the circle
+    :return: The median value of the list of values and the circle image
+    """
     height, width = image.shape[:2]
 
     residual = int((width - height) / 2) if width > height else 0
