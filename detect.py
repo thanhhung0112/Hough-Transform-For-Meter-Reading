@@ -5,10 +5,10 @@ import filter
 
 # The Specifications of clock
 # base on the distributed degree with the detected circle to determine min_angle and max_angle
-min_angle = 38 
-max_angle = 316
+min_angle = 17
+max_angle = 340
 min_value = 0
-max_value = 100                     
+max_value = 150                   
 
 def determine_avg_circles(circles):
     """
@@ -200,7 +200,7 @@ def detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y,
     return np.median(np.array(res)), circle
 
 if __name__ == '__main__':
-    image = cv.imread('test_image/test4.png')
+    image = cv.imread('test_image/test2.png')
     x, y, r, circle = detect_circle(image)
     res, img = detect_line(image, circle, min_angle, max_angle, min_value, max_value, x, y, r)
     print(res)
