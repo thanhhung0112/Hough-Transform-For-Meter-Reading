@@ -3,5 +3,5 @@ opencv-python
 matplotlib
 requests
 flask
-flask_cors
+flask-cors
 flask-ngrok
