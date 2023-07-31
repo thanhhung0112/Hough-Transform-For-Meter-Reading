@@ -3,5 +3,3 @@ opencv-python
 matplotlib
 requests
 flask
-flask-cors
-flask-ngrok

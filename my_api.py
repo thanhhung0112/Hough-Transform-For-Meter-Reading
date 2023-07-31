@@ -1,6 +1,4 @@
 from flask import Flask, render_template
-from flask_ngrok import run_with_ngrok
-from flask_cors import CORS, cross_origin
 from flask import request
 import cv2 as cv
 import os
@@ -12,22 +10,21 @@ import get_time
 # Initialize back end server
 app = Flask(__name__)
 
-# Apply flask cors
-# CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOAD_FOLDER'] = 'static'
-run_with_ngrok(app)
 
+# modify all params
 # The Specifications of clock
 min_angle = 17
 max_angle = 340
 min_value = 0
 max_value = 150
+url = "http://192.168.1.8:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
+
 loop = 0
-url = "http://192.168.43.151:8080/shot.jpg" # using ip webcam app in ch play to get the ip of camera
 
 @app.route('/', methods=['POST', 'GET'])
-@cross_origin(origin='*')
+# @cross_origin(origin='*')
 def detect_temperature():
     """
     The function is called when the user clicks the "Detect" button on the web page. 
@@ -118,4 +115,4 @@ def detect_temperature():
 
 # Start backend
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000, debug=True)
